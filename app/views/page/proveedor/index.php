@@ -27,21 +27,62 @@
             <div class="modal-header">
                 <h4 class="modal-title modalGuardar"></h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-            </div>
-            <form class="form-rol" onsubmit="return false;"> 
+            </div>    
+            <form class="form-usuario" onsubmit="return false;">        
                 <div class="modal-body">
-                    <fieldset>
-    	                <div class="form-group col-lg-12"> 
-    	                    <label class="control-label">Rol</label>
-                            <input type="text" class="form-control" name="rol" id="rol">               
-                            <input type="hidden" id="idrol" name="idrol">
-                            <input type="hidden" class="form-control" id="rolvalidar" name="rolvalidar" />
-    	                </div>
+                    <fieldset>                                             
+                        <div class="form-group col-lg-12">                            
+                            <div class="col-lg-6">
+                                <label class="control-label">RUC <span style="color: red;">*</span></label>
+                                <input type="text" class="numeros form-control" name="ruc" id="ruc">
+                                <input type="hidden" id="idproveedor" name="idproveedor">
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label">Teléfono <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" name="telefono" id="telefono">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">          
+                            <div class="col-lg-12">
+                                <label class="control-label">Proveedor <span style="color: red;">*</span></label>
+                                <input type="text" class="form-control" name="proveedor" id="proveedor">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">                            
+                            <div class="col-lg-6">
+                                <label class="control-label">Correo</label>
+                                <input class="form-control" name="correo" id="correo">
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label">Departamento <span style="color: red;">*</span></label>
+                                <select class="form-control" name="departamento" id="departamento" onchange="ubprovincia('','')"></select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">                            
+                            <div class="col-lg-6">
+                                <label class="control-label">Provincia <span style="color: red;">*</span></label>
+                                <select class="form-control" name="provincia" id="provincia" onchange="ubdistrito('','')">
+                                    <option value="0">--Seleccione--</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label">Distrito <span style="color: red;">*</span></label>
+                                <select class="form-control" name="distrito" id="distrito">
+                                    <option value="0">--Seleccione--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12">
+                            <div class="col-lg-12">
+                                <label class="control-label">Dirección</label>
+                                <input class="form-control" name="direccion" id="direccion">
+                            </div>
+                        </div>
                     </fieldset>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn width-100 btn-danger" data-dismiss="modal">Cerrar</button>
-                    <button class="btn width-100 btn-primary" id="btnguardar" onclick="guardar()">Guardar</button>
+                    <button class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-primary" type="" id="btnguardar" onclick="guardar()">Guardar</button>
                 </div>
             </form>
         </div>

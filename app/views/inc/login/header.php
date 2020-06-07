@@ -28,7 +28,7 @@
 
     <?php if(count($js)>=1){
         for ($i=0; $i < count($js); $i++) {?>
-            <script src="<?=BASE_URL?>pagejs/<?=$js[$i]?>"></script>
+            <script src="<?=BASE_URL?>pagejs/<?=$js[$i]?>?1.0"></script>
         <?php }
     }?>
 

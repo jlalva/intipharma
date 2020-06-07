@@ -2,38 +2,56 @@
 	class rol extends Controller{
 
 		public function __construct(){
-      if(Session::get('autenticado')){
-			$this->functionModel = $this->model('funciones');
-			$this->rolModel = $this->model('rolModelo');
-			$this->menu();
-      	}else{
-       		$this->redireccionar();
-      	}
+	      if(Session::get('autenticado')){
+				$this->functionModel = $this->model('funciones');
+				$this->grilla = $this->model('grillaModelo');
+				$this->rolModel = $this->model('rolModelo');
+				$this->menu();
+	      	}else{
+	       		$this->redireccionar();
+	      	}
 		}
 
-    public function index(){
-		$date=[
-			'titulo'=>'Roles',
-			'titulotabla'=>'Roles',
-			'url'=> 'rol',
-			'modulo'=> 'Seguridad'
-		];
+    	public function index(){
+			$date=[
+				'titulo'=>'Roles',
+				'titulotabla'=>'Roles',
+				'url'=> 'rol',
+				'modulo'=> 'Seguridad'
+			];
 
-		$fgrilla = [
-				'0'=>"SELECT rol,idrol,estareg FROM rol",
-				'1'=>"ROL",//HEAD DE TABLE
-				'2'=>"300",//ANCHO DE CELDA
-				'6'=>"",//WHERE
-				'7'=>" ORDER BY idrol DESC",//ORDER BY
-				'8'=>"rol ",//campos para buscar
-				'9'=>"Editar/editar/idrol/success/fa fa-edit,Accesos/acceso/idrol/primary/fa fa-list,Eliminar/eliminar/idrol/warning/fa fa-remove", //BOTONES TITULO,FUNCION,ID,COL,ICON
-				'10'=>10,//TOTAL DE REGISTROS POR PAGINA
-			]; //SQL
+	      	$js = [
+	      		'0'=>'rol.js'
+	      	];
+			$this->viewAdmin('rol/index',$js,$date);
+		}
 
-      	$js = [
-      		'0'=>'rol.js'
-      	];
-			$this->viewAdmin('rol/index',$fgrilla,$js,$date);
+		public function grilla(){
+			$datos = $this->grilla->rol();
+			$cad ='<table id="datatable" class="table table-striped table-bordered" style="width:100%">
+	              <thead>
+	                <tr>
+	                	<th width="10">Item</th>
+		                <th width="190">Rol</th>
+		                <th width="30">Acción</th>
+	                </tr>
+	              </thead>
+	              <tbody>';
+	        	for ($i=0; $i < count($datos); $i++) { 
+	        		$cad .='<tr>';
+	        			$cad .='<td>'.($i+1).'</td>';
+	        			$cad .='<td>'.$datos[$i]['rol'].'</td>';
+	        			$cad .='<td>
+	        				<button class="btn btn-success btn-sm" onclick="editarrol('.$datos[$i]['idrol'].')" title="Editar"><i class="fa fa-edit"></i></button>
+	        				<button class="btn btn-primary btn-sm" onclick="acceso('.$datos[$i]['idrol'].')" title="Acceso"><i class="fa fa-list"></i></button>
+	        				<button class="btn btn-danger btn-sm" onclick="eliminarrol('.$datos[$i]['idrol'].')" title="Eliminar"><i class="fa fa-remove"></i></button>
+	        				</td>';
+	        		$cad .='</tr>';
+	        	}
+
+	        $cad .='</tbody>
+	            </table>';
+	       	echo $cad;
 		}
 
 		public function verdatos(){
@@ -95,8 +113,9 @@
                                 	$checkeditar = '';
                                 	$checkcrear  = '';
                                 	$checkeliminr = '';
+                                	$idpermiso = '';
                                 	if(!empty($seleccionar)){
-                                		$checked = 'checked';
+                                		//$checked = 'checked';
                                 		if($seleccionar['ver']==1){
                                 			$checkver = 'checked';
                                 		}
@@ -109,15 +128,16 @@
                                 		if($seleccionar['eliminar']==1){
                                 			$checkeliminr = 'checked';
                                 		}
+                                		$idpermiso = $seleccionar['idpermiso'];
                                 	}
                                 	$cad .="<div class='panel-body'>
                                 			<div class='col-lg-12'>                        				
 					                            <input type='checkbox' class='grey checkbox-callback' ".$checked." onclick='daracceso(".$mod['idmodulo'].")' id='modulo".$mod['idmodulo']."'> ".$mod['modulo']."
 					                            	<div class='col-lg-12'>
-					                            		<input type='checkbox' ".$checkver." id='ver".$seleccionar['idpermiso']."' onclick='opcioncrud(".$seleccionar['idpermiso'].",1)'> Ver
-					                            		<input type='checkbox' ".$checkeditar." id='editar".$seleccionar['idpermiso']."' onclick='opcioncrud(".$seleccionar['idpermiso'].",2)'> Editar
-					                            		<input type='checkbox' ".$checkcrear." id='crear".$seleccionar['idpermiso']."' onclick='opcioncrud(".$seleccionar['idpermiso'].",3)'> Crear
-					                            		<input type='checkbox' ".$checkeliminr." id='eliminar".$seleccionar['idpermiso']."' onclick='opcioncrud(".$seleccionar['idpermiso'].",4)'> Eliminar
+					                            		<input type='checkbox' ".$checkver." id='ver".$idpermiso."' onclick='opcioncrud(".$idpermiso.",1)'> Ver
+					                            		<input type='checkbox' ".$checkeditar." id='editar".$idpermiso."' onclick='opcioncrud(".$idpermiso.",2)'> Editar
+					                            		<input type='checkbox' ".$checkcrear." id='crear".$idpermiso."' onclick='opcioncrud(".$idpermiso.",3)'> Crear
+					                            		<input type='checkbox' ".$checkeliminr." id='eliminar".$idpermiso."' onclick='opcioncrud(".$idpermiso.",4)'> Eliminar
 					                            	</div>
 					                        </div></div>";
                                 }                           

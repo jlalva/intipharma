@@ -1,89 +1,69 @@
-var Usuario = function() {
-	"use strict";
-
-	var runUsuarioValidar = function() {
-    var form = $('.form-usuario');
-    var errorHandler = $('.errorHandler', form);
-    form.validate({
-      rules : {
-        nombre : {
-          minlength : 3,
-          required : true
-        },
-        apellido : {
-          minlength : 3,
-          required : true
-        },
-        usuario : {
-          minlength : 4,
-          required : true
-        },
-        password : {
-          minlength : 6,
-          required : true
-        }
-      },
-      submitHandler : function(form) {
-        errorHandler.hide();
-        //form.submit();
-        var idusuario = $("#idusuario").val();
-		var nombre = $("#nombre").val();
-		var apellido = $("#apellido").val();
-		var usuario = $("#usuario").val();
-		var password = $("#password").val();
-		var idrol = $("#idrol").val();
-        if(idrol==0){
-			notificacion('error','','Seleccione el rol del usuario');
-			return;
-		}
-        $.ajax({
-			url:url+'user/ingresar',
-			type:'post',
-			data:{idusuario:idusuario,nombre:nombre,apellido:apellido,usuario:usuario,password:password,idrol:idrol},
-			beforeSend:function(){
-				bloquear("#btnguardar",'Cargando...');
-			},
-			success:function(data){
-				if(data==1){
-					modal('modalGuardar','','close');
-					changePagination(0);
-					notificacion('success','','Datos ingresados correctamente');
-				}else{
-					if(data==2){
-						modal('modalGuardar','','close');
-						changePagination(0);
-						notificacion('success','','Datos actualizados correctamente');
-					}else{
-						if(data==3){
-							notificacion('warning','','El usuario ingresado ya existe');
-							$("#usuario").val('');
-							$("#usuario").focus();
-						}else{
-							notificacion('error','','Error al registrar datos');
-						}					
-					}				
-				}
-				desbloquear("#btnguardar",'Guardar');
-			}
-		})
-      },
-      invalidHandler : function(event, validator) {
-        $(".mensaje").html("Ingrese todos sus datos para poder continuar.");
-        errorHandler.show();
-      }
-    });
-  };
-
-return {
-    init : function() {
-      runUsuarioValidar();
-    }
-  };
-}();
-
 $(function(){
-	Usuario.init();
+	grilla();
 })
+
+function guardar(){
+	var idusuario = $("#idusuario").val();
+	var nombre = $("#nombre").val();
+	var apellido = $("#apellido").val();
+	var usuario = $("#usuario").val();
+	var password = $("#password").val();
+	var idrol = $("#idrol").val();
+	if(nombre==''){
+		alertify.error("Ingrese el nombre del usuario");
+		$("#nombre").focus();
+		return;
+	}
+	if(apellido==''){
+		alertify.error("Ingrese el apellido del usuario");
+		$("#apellido").focus();
+		return;
+	}
+	if(usuario==''){
+		alertify.error("Ingrese el usuario");
+		$("#usuario").focus();
+		return;
+	}
+	if(password==''){
+		alertify.error("Ingrese el password");
+		$("#password").focus();
+		return;
+	}
+    if(idrol==0){
+		alertify.error('Seleccione el rol del usuario');
+		return;
+	}
+    $.ajax({
+		url:url+'user/ingresar',
+		type:'post',
+		data:{idusuario:idusuario,nombre:nombre,apellido:apellido,usuario:usuario,password:password,idrol:idrol},
+		beforeSend:function(){
+			bloquear("#btnguardar",'Cargando...');
+		},
+		success:function(data){
+			if(data==1){
+				modal('modalGuardar','','close');
+				grilla();
+				alertify.success('Datos ingresados correctamente');
+			}else{
+				if(data==2){
+					modal('modalGuardar','','close');
+					grilla();
+					alertify.success('Datos actualizados correctamente');
+				}else{
+					if(data==3){
+						alertify.warning('El usuario ingresado ya existe');
+						$("#usuario").val('');
+						$("#usuario").focus();
+					}else{
+						alertify.error('Error al registrar datos');
+					}					
+				}				
+			}
+			desbloquear("#btnguardar",'Guardar');
+		}
+	})
+}
 
 function abrirmodal(){
 	limpiar();
@@ -106,7 +86,7 @@ function limpiar(){
 }
 
 
-function editar(id){
+function editarusuario(id){
 	desbloquear("#btnguardar",'Guardar');
 	$.ajax({
 		url:url+'user/verdatos',
@@ -129,7 +109,7 @@ function editar(id){
 	})
 }
 
-function eliminar(id){
+function eliminarusuario(id){
 	$("#idusuario").val(id)
 	modal('modalEliminar','CONFIRMAR!!','open');
 }
@@ -139,19 +119,19 @@ function confirma_eliminar(){
 	$.ajax({
 		url:url+'user/eliminar',
 		type:'post',
-		data:{id:id,opcion:0},
+		data:{id:id,opcion:1},
 		success:function(data){
 			if(data==3){
-				notificacion('warning','','Registro desabilitado!!');
+				alertify.warning('Registro eliminado!!');
 				modal('modalEliminar','','close');
-				changePagination(0);
+				grilla();
 			}else{
 				if(data==4){
-					notificacion('warning','','Registro eliminado!!');
+					alertify.warning('Registro eliminado!!');
 					modal('modalEliminar','','close');
-					changePagination(0);
+					grilla();
 				}else{
-					notificacion('error','','Error al eliminar!!');
+					alertify.error('Error al eliminar!!');
 				}				
 			}
 		}
@@ -171,11 +151,11 @@ function confirma_restablecer(){
 		data:{id:id,opcion:2},
 		success:function(data){
 			if(data==4){
-				notificacion('warning','','Registro habilitado!!');
+				alertify.error('Registro habilitado!!');
 				modal('modalRestablecer','','close');
-				changePagination(0);
+				grilla();
 			}else{
-				notificacion('error','','Error al habilitar!!');			
+				alertify.error('Error al habilitar!!');			
 			}
 		}
 	})
@@ -194,12 +174,48 @@ function confirma_borrar(){
 		data:{id:id,opcion:1},
 		success:function(data){
 			if(data==4){
-				notificacion('error','','Registro eliminado!!');
+				alertify.error('Registro eliminado!!');
 				modal('modalBorrar','','close');
-				changePagination(0);
+				grilla();
 			}else{
-				notificacion('error','','Error al eliminar!!');			
+				alertify.error('Error al eliminar!!');			
 			}
 		}
 	})
+}
+
+function grilla(){
+	$.ajax({
+		url:url+'user/grilla',
+		success:function(data){
+			$("#tabla").html(data);
+			tabla();
+		}
+	})
+}
+
+function tabla(){
+	$('#datatable').DataTable({
+		ordering: false,
+	    language: {
+	        "decimal": "",
+	        "emptyTable": "No hay información",
+	        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+	        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+	        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+	        "infoPostFix": "",
+	        "thousands": ",",
+	        "lengthMenu": "Mostrar _MENU_ Entradas",
+	        "loadingRecords": "Cargando...",
+	        "processing": "Procesando...",
+	        "search": "Buscar:",
+	        "zeroRecords": "Sin resultados encontrados",
+	        "paginate": {
+	            "first": "Primero",
+	            "last": "Ultimo",
+	            "next": "Siguiente",
+	            "previous": "Anterior"
+	        }
+	    }
+	});
 }

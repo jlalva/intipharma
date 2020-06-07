@@ -4,6 +4,7 @@
 		public function __construct(){
 	      if(Session::get('autenticado')){
 				$this->functionModel = $this->model('funciones');
+				$this->grilla = $this->model('grillaModelo');
 				$this->menu();
 	      	}else{
 	       		$this->redireccionar();
@@ -21,21 +22,43 @@
 				'modulo'=> 'Seguridad'
 			];
 
-			$fgrilla = [
-				'0'=>"SELECT u.nombre, u.apellido, r.rol, u.idusuario, u.estareg FROM usuario u INNER JOIN rol r ON u.idrol=r.idrol",
-				'1'=>"NOMBRE,APELLIDO,ROL",//HEAD DE TABLE
-				'2'=>"90,90,50",//ANCHO DE CELDA
-				'6'=>" WHERE u.idrol!=2",//WHERE
-				'7'=>" ORDER BY u.idusuario DESC",//ORDER BY
-				'8'=>"u.nombre/u.apellido/r.rol/CONCAT(u.nombre, ' ',u.apellido) ",//campos para buscar
-				'9'=>"Editar/editar/idusuario/success/fa fa-edit,Eliminar/eliminar/idusuario/warning/fa fa-remove", //BOTONES TITULO,FUNCION,ID,COL,ICON
-				'10'=>10,//TOTAL DE REGISTROS POR PAGINA
-			]; //SQL
-
 	      	$js = [
 	      		'0'=>'user.js'
 	      	];
-				$this->viewAdmin('user/index',$fgrilla,$js,$date);
+				$this->viewAdmin('user/index',$js,$date);
+		}
+
+		public function grilla(){
+			$datos = $this->grilla->usuario();
+			$cad ='<table id="datatable" class="table table-striped table-bordered" style="width:100%">
+	              <thead>
+	                <tr>
+	                	<th>Item</th>
+		                <th>Nombre</th>
+		                <th>Apellido</th>
+		                <th>Usuario</th>
+		                <th>Rol</th>
+		                <th>Acción</th>
+	                </tr>
+	              </thead>
+	              <tbody>';
+	        	for ($i=0; $i < count($datos); $i++) { 
+	        		$cad .='<tr>';
+	        			$cad .='<td>'.($i+1).'</td>';
+	        			$cad .='<td>'.$datos[$i]['nombre'].'</td>';
+	        			$cad .='<td>'.$datos[$i]['apellido'].'</td>';
+	        			$cad .='<td>'.$datos[$i]['usuario'].'</td>';
+	        			$cad .='<td>'.$datos[$i]['rol'].'</td>';
+	        			$cad .='<td>
+	        				<button class="btn btn-success btn-sm" onclick="editarusuario('.$datos[$i]['idusuario'].')" title="Editar"><i class="fa fa-edit"></i></button>
+	        				<button class="btn btn-danger btn-sm" onclick="eliminarusuario('.$datos[$i]['idusuario'].')" title="Eliminar"><i class="fa fa-remove"></i></button>
+	        				</td>';
+	        		$cad .='</tr>';
+	        	}
+
+	        $cad .='</tbody>
+	            </table>';
+	       	echo $cad;
 		}
 
 		public function ingresar(){

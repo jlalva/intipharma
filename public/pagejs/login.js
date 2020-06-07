@@ -33,11 +33,13 @@ function ingresar(){
   if(usuario==''){
     alertify.error('Ingrese su usario para continuar');
     $("#usuario").focus();
+    desbloquear("#btningresar",'INICIAR');
     return;
   }
   if(password==''){
     alertify.error('Ingrese su password para continuar');
     $("#password").focus();
+    desbloquear("#btningresar",'INICIAR');
     return;
   }
   $.ajax({

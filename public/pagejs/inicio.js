@@ -1,10 +1,5 @@
 $(function(){
-	var idedificio = $("#edificiogeneral").val();
-	if(idedificio==0){
-		$(".divinforme").hide();
-	}
-	datosedificio();
-	totales();
+
 })
 function datosedificio(){
 	var idedificio = $("#edificiogeneral").val();

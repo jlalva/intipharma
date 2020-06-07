@@ -45,12 +45,12 @@
     <script src = "https://code.jquery.com/jquery-1.10.2.js"></script>
     <script src = "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 
-    <script src="<?=BASE_URL?>pagejs/funciones.js"></script>
+    <script src="<?=BASE_URL?>pagejs/funciones.js?1.1"></script>
 
     
         <?php if(count($js)>=1){
             for ($i=0; $i < count($js); $i++) {?>
-                <script src="<?=BASE_URL?>pagejs/<?=$js[$i]?>?1.7"></script>
+                <script src="<?=BASE_URL?>pagejs/<?=$js[$i]?>?2.0"></script>
             <?php }
         }?>
 
@@ -111,7 +111,7 @@
                           <span class="title"><?=$arraymenu[$i]['padre']?></span>
                           <i class="icon-arrow"></i>
                         </a>
-                        <ul class="nav child_menu" style="display: block;">
+                        <ul class="nav child_menu">
                       <?php }
                       if($descripcion == $arraymenu[$i]['padre']){ $url = BASE_URL.$arraymenu[$i]['url'];
                             if($arraymenu[$i]['url']==$date['url']){
@@ -146,11 +146,9 @@
                 <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
               </a>
             </div>
-            <!-- /menu footer buttons -->
           </div>
         </div>
 
-        <!-- top navigation -->
         <div class="top_nav">
             <div class="nav_menu">
                 <div class="nav toggle">
@@ -167,78 +165,11 @@
                       <a class="dropdown-item"  href="<?=BASE_URL?>validar_usuario/salir"><i class="fa fa-sign-out pull-right"></i> Salir</a>
                     </div>
                   </li>
-  
-                  <!--<li role="presentation" class="nav-item dropdown open">
-                    <a href="javascript:;" class="dropdown-toggle info-number" id="navbarDropdown1" data-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-envelope-o"></i>
-                      <span class="badge bg-green">6</span>
-                    </a>
-                    <ul class="dropdown-menu list-unstyled msg_list" role="menu" aria-labelledby="navbarDropdown1">
-                      <li class="nav-item">
-                        <a class="dropdown-item">
-                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                          <span>
-                            <span>John Smith</span>
-                            <span class="time">3 mins ago</span>
-                          </span>
-                          <span class="message">
-                            Film festivals used to be do-or-die moments for movie makers. They were where...
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="dropdown-item">
-                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                          <span>
-                            <span>John Smith</span>
-                            <span class="time">3 mins ago</span>
-                          </span>
-                          <span class="message">
-                            Film festivals used to be do-or-die moments for movie makers. They were where...
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="dropdown-item">
-                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                          <span>
-                            <span>John Smith</span>
-                            <span class="time">3 mins ago</span>
-                          </span>
-                          <span class="message">
-                            Film festivals used to be do-or-die moments for movie makers. They were where...
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="dropdown-item">
-                          <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                          <span>
-                            <span>John Smith</span>
-                            <span class="time">3 mins ago</span>
-                          </span>
-                          <span class="message">
-                            Film festivals used to be do-or-die moments for movie makers. They were where...
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item">
-                        <div class="text-center">
-                          <a class="dropdown-item">
-                            <strong>See All Alerts</strong>
-                            <i class="fa fa-angle-right"></i>
-                          </a>
-                        </div>
-                      </li>
-                    </ul>
-                  </li>-->
                 </ul>
               </nav>
             </div>
           </div>
-        <!-- /top navigation -->
 
-        <!-- page content -->
         <div class="right_col" role="main">
           <div class="">
               <div class="page-title">
@@ -246,15 +177,5 @@
                   <h3><?=$date['titulotabla']?></h3>
                 </div>
 
-                <div class="title_right">
-                  <div class="col-md-5 col-sm-5   form-group pull-right top_search">
-                    <div class="input-group">
-                      <span class="input-group-btn">
-                        <select class="form-control" id="edificiogeneral" name="edificiogeneral" onchange="fijaredificio()">
-                          <?=$this->selectedificio('edificio','nombre_edificio','idedificio',1,'',Session::get('idedificio'));?>
-                        </select> 
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                
               </div>

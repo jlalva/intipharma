@@ -10,6 +10,10 @@ $(function(){
     $('.decimal').on('input', function () { 
       this.value = this.value.replace(/[^0-9^.^-]/g,'');
     });
+
+    $('.numeros').on('input', function () { 
+      this.value = this.value.replace(/[^0-9]/g,'');
+    });
 })
 
 function modal(modal,titulo,opcion){

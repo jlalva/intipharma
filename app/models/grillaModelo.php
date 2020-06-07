@@ -7,25 +7,16 @@
 			$this->db = new DataBase;
 		}
 
-		public function ui($idedificio){
-			$this->db->query("SELECT tu.descripcion_tipo_ui,uu.m2_ui,uu.nombre_ui,CASE WHEN uu.ocupado=0 THEN 'Sin 				asignar' ELSE 'Asignado' END as condicion ,uu.estareg,uu.id_ui 	
-							FROM ui uu 
-							INNER JOIN tipo_ui tu on tu.id_tipo_ui=uu.id_tipo_ui
-							WHERE uu.idinmueble=$idedificio");
+		public function usuario(){
+			$this->db->query("SELECT u.idusuario,u.nombre,u.apellido,u.usuario,r.rol FROM usuario u 
+							INNER JOIN rol r ON r.idrol=u.idrol
+							ORDER BY u.idusuario DESC");
 			return $this->db->registers();
 		}
 
-		public function conceptos($idedificio){
-			$this->db->query("SELECT codigo,concepto,importe,idconcepto,estareg FROM concepto
-							WHERE idedificio=$idedificio
-							ORDER BY idconcepto DESC");
-			return $this->db->registers();
-		}
-
-		public function tipoconcepto($idedificio){
-			$this->db->query("SELECT descripcion,idtipoconcepto,estareg FROM tipoconcepto
-							WHERE idedificio=$idedificio
-							ORDER BY idtipoconcepto DESC");
+		public function rol(){
+			$this->db->query("SELECT * FROM rol 
+							ORDER BY idrol DESC");
 			return $this->db->registers();
 		}
 

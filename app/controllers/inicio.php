@@ -13,7 +13,7 @@
 
     public function index(){
 		$date=[
-			'titulo'=>'GWM - INICIO',
+			'titulo'=>'INICIO',
 			'titulotabla'=>'INICIO',
 			'url'=>'inicio',
 			'modulo'=>'inicio'

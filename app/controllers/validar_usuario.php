@@ -14,19 +14,12 @@
 			$datos = $this->validarModel->validardatos(trim($usuario));
 			if(!empty($datos)){
 				if(password_verify($password,$datos['password'])){
-					$data = [
-							'idusuario'=>$datos['idusuario'],
-							'idrol'=>$datos['idrol'],
-							'fecha_acceso'=>date('Y-m-d H:i:s')
-						];
-					$resp = $this->save($data,'log_acceso');
 					Session::set('autenticado',true);
 					Session::set('idrol',$datos['idrol']);
 					Session::set('idusuario',$datos['idusuario']);
 					Session::set('usuario',$datos['usuario']);
 					Session::set('nombre',$datos['nombre']);
 					Session::set('apellido',$datos['apellido']);
-					Session::set('idedificio',0);
 					$data['mensaje'] ='Ingresando al sistema';
 					$data['res']=1;
 				}else{

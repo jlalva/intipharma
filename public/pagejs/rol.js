@@ -1,68 +1,5 @@
-var Rol = function() {
-	"use strict";
-
-	var runRolValidar = function() {
-    var form = $('.form-rol');
-    var errorHandler = $('.errorHandler', form);
-    form.validate({
-      rules : {
-        rol : {
-          minlength : 3,
-          required : true
-        }
-      },
-      submitHandler : function(form) {
-        errorHandler.hide();
-        //form.submit();
-        var idrol = $("#idrol").val();
-		var rol = $("#rol").val();
-		var rolvalidar = $("#rolvalidar").val();
-		if(rolvalidar==rol){
-			notificacion('info','','No realizó ninguna modificación');
-			$("#rol").focus();
-			return;
-		}
-		$.ajax({
-			url:url+'rol/ingresar',
-			type:'post',
-			data:{idrol:idrol,rol:rol},
-			beforeSend:function(){
-				bloquear("#btnguardar",'Cargando...');
-			},
-			success:function(data){
-				if(data==1){
-					modal('modalGuardar','','close');
-					changePagination(0);
-					notificacion('success','','Datos ingresados correctamente');
-				}else{
-					if(data==2){
-						modal('modalGuardar','','close');
-						changePagination(0);
-						notificacion('success','','Datos actualizados correctamente');
-					}else{
-						notificacion('error','','Error al registrar información');
-					}				
-				}
-				desbloquear("#btnguardar",'Guardar');
-			}
-		})
-      },
-      invalidHandler : function(event, validator) {
-        $(".mensaje").html("Ingrese todos sus datos para poder continuar.");
-        errorHandler.show();
-      }
-    });
-  };
-
-return {
-    init : function() {
-      runRolValidar();
-    }
-  };
-}();
-
 $(function(){
-	Rol.init();
+	grilla();
 
 	$('input.checkbox-callback').on('ifChecked', function(event) {
 			alert('Checked');
@@ -72,12 +9,55 @@ $(function(){
 	});
 })
 
+function guardar(){
+	bloquear("#btnguardar",'Cargando...');
+	var idrol = $("#idrol").val();
+	var rol = $("#rol").val();
+	var rolvalidar = $("#rolvalidar").val();
+	if(rol==''){
+		alertify.warning('Ingrese el rol');
+		$("#rol").focus();
+		desbloquear("#btnguardar",'Guardar');
+		return;
+	}
+	if(rolvalidar==rol){
+		alertify.warning('No realizó ninguna modificación');
+		$("#rol").focus();
+		desbloquear("#btnguardar",'Guardar');
+		return;
+	}
+	$.ajax({
+		url:url+'rol/ingresar',
+		type:'post',
+		data:{idrol:idrol,rol:rol},
+		beforeSend:function(){
+			bloquear("#btnguardar",'Cargando...');
+		},
+		success:function(data){
+			if(data==1){
+				modal('modalGuardar','','close');
+				grilla();
+				alertify.success('Datos ingresados correctamente');
+			}else{
+				if(data==2){
+					modal('modalGuardar','','close');
+					grilla();
+					alertify.success('Datos actualizados correctamente');
+				}else{
+					alertify.error('Error al registrar información');
+				}				
+			}
+			desbloquear("#btnguardar",'Guardar');
+		}
+	})
+}
+
 function abrirmodal(){
 	limpiar();
 	modal('modalGuardar','AGREGAR ROL','open');
 }
 
-function editar(id){
+function editarrol(id){
 	desbloquear("#btnguardar",'Guardar');
 	$.ajax({
 		url:url+'rol/verdatos',
@@ -108,17 +88,17 @@ function confirma_restablecer(){
 		data:{id:id,opcion:2},
 		success:function(data){
 			if(data==4){
-				notificacion('warning','','Registro habilitado!!');
+				alertify.warning('Registro habilitado!!');
 				modal('modalRestablecer','','close');
-				changePagination(0);
+				grilla();
 			}else{
-				notificacion('error','','Error al habilitar!!');			
+				alertify.error('Error al habilitar!!');			
 			}
 		}
 	})
 }
 
-function eliminar(id){
+function eliminarrol(id){
 	$("#idrol").val(id)
 	modal('modalEliminar','CONFIRMAR!!','open');
 }
@@ -128,17 +108,17 @@ function confirma_eliminar(){
 	$.ajax({
 		url:url+'rol/eliminar',
 		type:'post',
-		data:{id:id,opcion:0},
+		data:{id:id,opcion:1},
 		success:function(data){
 			if(data==3){
-				notificacion('warning','','Registro desabilitado!!');
+				alertify.warning('Registro desabilitado!!');
 				modal('modalEliminar','','close');
-				changePagination(0);
+				grilla();
 			}else{
 				if(data==4){
-					notificacion('error','','Registro eliminado!!');
+					alertify.error('Registro eliminado!!');
 					modal('modalEliminar','','close');
-					changePagination(0);
+					grilla();
 				}else{
 					alertify.error('Error al eliminar!!');
 				}				
@@ -212,12 +192,48 @@ function confirma_borrar(){
 		data:{id:id,opcion:1},
 		success:function(data){
 			if(data==4){
-				notificacion('error','','Registro eliminado!!');
+				alertify.warning('Registro eliminado!!');
 				modal('modalBorrar','','close');
-				changePagination(0);
+				grilla();
 			}else{
-				notificacion('error','','Error al eliminar!!');			
+				alertify.error('Error al eliminar!!');			
 			}
 		}
 	})
+}
+
+function grilla(){
+	$.ajax({
+		url:url+'rol/grilla',
+		success:function(data){
+			$("#tabla").html(data);
+			tabla();
+		}
+	})
+}
+
+function tabla(){
+	$('#datatable').DataTable({
+		ordering: false,
+	    language: {
+	        "decimal": "",
+	        "emptyTable": "No hay información",
+	        "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+	        "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+	        "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+	        "infoPostFix": "",
+	        "thousands": ",",
+	        "lengthMenu": "Mostrar _MENU_ Entradas",
+	        "loadingRecords": "Cargando...",
+	        "processing": "Procesando...",
+	        "search": "Buscar:",
+	        "zeroRecords": "Sin resultados encontrados",
+	        "paginate": {
+	            "first": "Primero",
+	            "last": "Ultimo",
+	            "next": "Siguiente",
+	            "previous": "Anterior"
+	        }
+	    }
+	});
 }
